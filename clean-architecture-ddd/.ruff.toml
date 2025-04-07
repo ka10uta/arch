@@ -1,0 +1,7 @@
+target-version = "py313"
+line-length = 120
+exclude = [
+    "infrastructure/proto", # because auto generated
+]
+lint.select = ["ALL"]
+lint.ignore = ["D"]

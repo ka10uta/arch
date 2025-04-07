@@ -5,7 +5,7 @@
             "path": "."
         },
         {
-            "path": "py-clean-architecture-with-ddd"
+            "path": "py_clean_architecture_with_ddd"
         },
         {
             "path": "protobuf"

@@ -1,0 +1,7 @@
+---
+description: 
+globs: *.py
+alwaysApply: false
+---
+ドメイン駆動設計とクリーンアーキテクチャを設計思想の基とします。
+クリーンアーキテクチャの4つの層を外側からInfrastructure層、IAdapter層、Application層、Domain層とします。

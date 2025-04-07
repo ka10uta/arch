@@ -1,0 +1,12 @@
+[project]
+name = "clean-architecture-ddd"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "grpcio>=1.71.0",
+    "grpcio-reflection>=1.62.3",
+    "protobuf>=6.30.2",
+    "pydantic-settings>=2.8.1",
+]

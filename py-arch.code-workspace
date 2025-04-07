@@ -1,0 +1,14 @@
+{
+    "folders": [
+        {
+            "name": "py-arch",
+            "path": "."
+        },
+        {
+            "path": "clean-architecture-ddd"
+        },
+        {
+            "path": "protobuf"
+        }
+    ]
+}

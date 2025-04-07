@@ -1,8 +1,8 @@
 syntax = "proto3";
 
-package proto.health.v1;
+package infrastructure.proto.health.v1;
 
-service HealthService {
+service Health {
   rpc HealthCheck(HealthCheckRequest) returns (HealthCheckResponse) {}
 }
 

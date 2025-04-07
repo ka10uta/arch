@@ -2,10 +2,10 @@
 """Client and server classes corresponding to protobuf-defined services."""
 import grpc
 
-from proto.health.v1 import service_pb2 as proto_dot_health_dot_v1_dot_service__pb2
+from infrastructure.proto.v1.health import service_pb2 as infrastructure_dot_proto_dot_v1_dot_health_dot_service__pb2
 
 
-class HealthServiceStub(object):
+class HealthStub(object):
     """Missing associated documentation comment in .proto file."""
 
     def __init__(self, channel):
@@ -15,13 +15,13 @@ class HealthServiceStub(object):
             channel: A grpc.Channel.
         """
         self.HealthCheck = channel.unary_unary(
-                '/proto.health.v1.HealthService/HealthCheck',
-                request_serializer=proto_dot_health_dot_v1_dot_service__pb2.HealthCheckRequest.SerializeToString,
-                response_deserializer=proto_dot_health_dot_v1_dot_service__pb2.HealthCheckResponse.FromString,
+                '/infrastructure.proto.health.v1.Health/HealthCheck',
+                request_serializer=infrastructure_dot_proto_dot_v1_dot_health_dot_service__pb2.HealthCheckRequest.SerializeToString,
+                response_deserializer=infrastructure_dot_proto_dot_v1_dot_health_dot_service__pb2.HealthCheckResponse.FromString,
                 _registered_method=True)
 
 
-class HealthServiceServicer(object):
+class HealthServicer(object):
     """Missing associated documentation comment in .proto file."""
 
     def HealthCheck(self, request, context):
@@ -31,22 +31,22 @@ class HealthServiceServicer(object):
         raise NotImplementedError('Method not implemented!')
 
 
-def add_HealthServiceServicer_to_server(servicer, server):
+def add_HealthServicer_to_server(servicer, server):
     rpc_method_handlers = {
             'HealthCheck': grpc.unary_unary_rpc_method_handler(
                     servicer.HealthCheck,
-                    request_deserializer=proto_dot_health_dot_v1_dot_service__pb2.HealthCheckRequest.FromString,
-                    response_serializer=proto_dot_health_dot_v1_dot_service__pb2.HealthCheckResponse.SerializeToString,
+                    request_deserializer=infrastructure_dot_proto_dot_v1_dot_health_dot_service__pb2.HealthCheckRequest.FromString,
+                    response_serializer=infrastructure_dot_proto_dot_v1_dot_health_dot_service__pb2.HealthCheckResponse.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
-            'proto.health.v1.HealthService', rpc_method_handlers)
+            'infrastructure.proto.health.v1.Health', rpc_method_handlers)
     server.add_generic_rpc_handlers((generic_handler,))
-    server.add_registered_method_handlers('proto.health.v1.HealthService', rpc_method_handlers)
+    server.add_registered_method_handlers('infrastructure.proto.health.v1.Health', rpc_method_handlers)
 
 
  # This class is part of an EXPERIMENTAL API.
-class HealthService(object):
+class Health(object):
     """Missing associated documentation comment in .proto file."""
 
     @staticmethod
@@ -63,9 +63,9 @@ class HealthService(object):
         return grpc.experimental.unary_unary(
             request,
             target,
-            '/proto.health.v1.HealthService/HealthCheck',
-            proto_dot_health_dot_v1_dot_service__pb2.HealthCheckRequest.SerializeToString,
-            proto_dot_health_dot_v1_dot_service__pb2.HealthCheckResponse.FromString,
+            '/infrastructure.proto.health.v1.Health/HealthCheck',
+            infrastructure_dot_proto_dot_v1_dot_health_dot_service__pb2.HealthCheckRequest.SerializeToString,
+            infrastructure_dot_proto_dot_v1_dot_health_dot_service__pb2.HealthCheckResponse.FromString,
             options,
             channel_credentials,
             insecure,

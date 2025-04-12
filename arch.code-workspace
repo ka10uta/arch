@@ -8,6 +8,9 @@
             "path": "py_clean_architecture_with_ddd"
         },
         {
+            "path": "py_di_fastapi"
+        },
+        {
             "path": "protobuf"
         }
     ]

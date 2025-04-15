@@ -5,14 +5,22 @@ description = "Clean Architecture with DDD implementation in Python"
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
+    "aiosqlite>=0.21.0",
     "grpcio>=1.71.0",
     "grpcio-reflection>=1.62.3",
     "protobuf>=6.30.2",
     "pydantic-settings>=2.8.1",
+    "tortoise-orm>=0.24.2",
 ]
 
 [dependency-groups]
 dev = [
+    "aerich[toml]>=0.8.2",
     "mypy>=1.15.0",
     "ruff>=0.11.4",
 ]
+
+[tool.aerich]
+tortoise_orm = "app.infrastructure.database.tortoise_config"
+location = "./migrations"
+src_folder = "./."

@@ -3,8 +3,8 @@ managed:
   enabled: true
 plugins:
   - remote: buf.build/protocolbuffers/python
-    out: ../
+    out: ../py_clean_architecture_with_ddd
   - remote: buf.build/protocolbuffers/pyi
-    out: ../
+    out: ../py_clean_architecture_with_ddd
   - remote: buf.build/grpc/python
-    out: ../
+    out: ../py_clean_architecture_with_ddd

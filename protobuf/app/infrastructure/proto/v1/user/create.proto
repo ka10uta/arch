@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+package infrastructure.proto.user.v1;
+
+import "app/infrastructure/proto/v1/user/model.proto";
+
+message CreateUserRequest {
+  User user = 1;
+}
+
+message CreateUserResponse {
+  User user = 1;
+}

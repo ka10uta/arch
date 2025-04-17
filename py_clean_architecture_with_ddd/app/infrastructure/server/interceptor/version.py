@@ -1,7 +1,6 @@
 from collections.abc import Callable
 
 import grpc
-
 from infrastructure.server import config as server_config
 
 
@@ -27,8 +26,9 @@ class VersionInterceptor(grpc.ServerInterceptor):
     def _wrap_unary_response_with_version(self, handler_fn: Callable) -> Callable:
         def new_handler(request: object, servicer_context: grpc.ServicerContext) -> object:
             response = handler_fn(request, servicer_context)
-            # レスポンスにversionフィールドがある場合のみ設定
-            if hasattr(response, "version"):
-                response.version = self.config.version
+            # メタデータにバージョン情報を追加
+            servicer_context.set_trailing_metadata((
+                ("version", self.config.version),
+            ))
             return response
         return new_handler

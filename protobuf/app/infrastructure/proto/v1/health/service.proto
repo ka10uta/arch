@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package infrastructure.proto.health.v1;
 
-service Health {
+service HealthService {
   rpc HealthCheck(HealthCheckRequest) returns (HealthCheckResponse) {}
 }
 
@@ -10,5 +10,4 @@ message HealthCheckRequest {}
 
 message HealthCheckResponse {
   string status = 1;
-  string version = 2;
 }

@@ -8,6 +8,7 @@ dependencies = [
     "aiosqlite>=0.21.0",
     "grpcio>=1.71.0",
     "grpcio-reflection>=1.62.3",
+    "injector>=0.22.0",
     "protobuf>=6.30.2",
     "pydantic-settings>=2.8.1",
     "tortoise-orm>=0.24.2",

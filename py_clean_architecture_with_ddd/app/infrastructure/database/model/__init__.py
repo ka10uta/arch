@@ -1,13 +1,13 @@
-from .comment import Comment
-from .like import Like
-from .notification import Notification
-from .post import Post
-from .user import User
+from .comment import CommentModel
+from .like import LikeModel
+from .notification import NotificationModel
+from .post import PostModel
+from .user import UserModel
 
 __all__ = [
-    "Comment",
-    "Like",
-    "Notification",
-    "Post",
-    "User",
+    "CommentModel",
+    "LikeModel",
+    "NotificationModel",
+    "PostModel",
+    "UserModel",
 ]

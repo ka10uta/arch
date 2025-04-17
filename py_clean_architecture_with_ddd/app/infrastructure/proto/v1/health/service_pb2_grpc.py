@@ -2,10 +2,10 @@
 """Client and server classes corresponding to protobuf-defined services."""
 import grpc
 
-from py_clean_architecture_with_ddd.app.infrastructure.proto.v1.health import service_pb2 as py__clean__architecture__with__ddd_dot_app_dot_infrastructure_dot_proto_dot_v1_dot_health_dot_service__pb2
+from app.infrastructure.proto.v1.health import service_pb2 as app_dot_infrastructure_dot_proto_dot_v1_dot_health_dot_service__pb2
 
 
-class HealthStub(object):
+class HealthServiceStub(object):
     """Missing associated documentation comment in .proto file."""
 
     def __init__(self, channel):
@@ -15,13 +15,13 @@ class HealthStub(object):
             channel: A grpc.Channel.
         """
         self.HealthCheck = channel.unary_unary(
-                '/infrastructure.proto.health.v1.Health/HealthCheck',
-                request_serializer=py__clean__architecture__with__ddd_dot_app_dot_infrastructure_dot_proto_dot_v1_dot_health_dot_service__pb2.HealthCheckRequest.SerializeToString,
-                response_deserializer=py__clean__architecture__with__ddd_dot_app_dot_infrastructure_dot_proto_dot_v1_dot_health_dot_service__pb2.HealthCheckResponse.FromString,
+                '/infrastructure.proto.health.v1.HealthService/HealthCheck',
+                request_serializer=app_dot_infrastructure_dot_proto_dot_v1_dot_health_dot_service__pb2.HealthCheckRequest.SerializeToString,
+                response_deserializer=app_dot_infrastructure_dot_proto_dot_v1_dot_health_dot_service__pb2.HealthCheckResponse.FromString,
                 _registered_method=True)
 
 
-class HealthServicer(object):
+class HealthServiceServicer(object):
     """Missing associated documentation comment in .proto file."""
 
     def HealthCheck(self, request, context):
@@ -31,22 +31,22 @@ class HealthServicer(object):
         raise NotImplementedError('Method not implemented!')
 
 
-def add_HealthServicer_to_server(servicer, server):
+def add_HealthServiceServicer_to_server(servicer, server):
     rpc_method_handlers = {
             'HealthCheck': grpc.unary_unary_rpc_method_handler(
                     servicer.HealthCheck,
-                    request_deserializer=py__clean__architecture__with__ddd_dot_app_dot_infrastructure_dot_proto_dot_v1_dot_health_dot_service__pb2.HealthCheckRequest.FromString,
-                    response_serializer=py__clean__architecture__with__ddd_dot_app_dot_infrastructure_dot_proto_dot_v1_dot_health_dot_service__pb2.HealthCheckResponse.SerializeToString,
+                    request_deserializer=app_dot_infrastructure_dot_proto_dot_v1_dot_health_dot_service__pb2.HealthCheckRequest.FromString,
+                    response_serializer=app_dot_infrastructure_dot_proto_dot_v1_dot_health_dot_service__pb2.HealthCheckResponse.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
-            'infrastructure.proto.health.v1.Health', rpc_method_handlers)
+            'infrastructure.proto.health.v1.HealthService', rpc_method_handlers)
     server.add_generic_rpc_handlers((generic_handler,))
-    server.add_registered_method_handlers('infrastructure.proto.health.v1.Health', rpc_method_handlers)
+    server.add_registered_method_handlers('infrastructure.proto.health.v1.HealthService', rpc_method_handlers)
 
 
  # This class is part of an EXPERIMENTAL API.
-class Health(object):
+class HealthService(object):
     """Missing associated documentation comment in .proto file."""
 
     @staticmethod
@@ -63,9 +63,9 @@ class Health(object):
         return grpc.experimental.unary_unary(
             request,
             target,
-            '/infrastructure.proto.health.v1.Health/HealthCheck',
-            py__clean__architecture__with__ddd_dot_app_dot_infrastructure_dot_proto_dot_v1_dot_health_dot_service__pb2.HealthCheckRequest.SerializeToString,
-            py__clean__architecture__with__ddd_dot_app_dot_infrastructure_dot_proto_dot_v1_dot_health_dot_service__pb2.HealthCheckResponse.FromString,
+            '/infrastructure.proto.health.v1.HealthService/HealthCheck',
+            app_dot_infrastructure_dot_proto_dot_v1_dot_health_dot_service__pb2.HealthCheckRequest.SerializeToString,
+            app_dot_infrastructure_dot_proto_dot_v1_dot_health_dot_service__pb2.HealthCheckResponse.FromString,
             options,
             channel_credentials,
             insecure,

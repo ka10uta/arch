@@ -1,7 +1,16 @@
 target-version = "py313"
 line-length = 120
 exclude = [
-    "infrastructure/proto", # because auto generated
+    "app/infrastructure/proto", # because auto generated
+    "migrations", # because auto generated
 ]
 lint.select = ["ALL"]
 lint.ignore = ["D"]
+
+[lint.flake8-builtins]
+ignorelist = ["id"] # `id`という名前の変数だけを許可する
+
+
+[lint.per-file-ignores]
+# 自動生成なのでapp/infrastructure/server/servicer配下はN802を無視
+"app/infrastructure/server/servicer/*.py" = ["N802"]

@@ -9,9 +9,7 @@ class HealthCheckRequest(_message.Message):
     def __init__(self) -> None: ...
 
 class HealthCheckResponse(_message.Message):
-    __slots__ = ("status", "version")
+    __slots__ = ("status",)
     STATUS_FIELD_NUMBER: _ClassVar[int]
-    VERSION_FIELD_NUMBER: _ClassVar[int]
     status: str
-    version: str
-    def __init__(self, status: _Optional[str] = ..., version: _Optional[str] = ...) -> None: ...
+    def __init__(self, status: _Optional[str] = ...) -> None: ...

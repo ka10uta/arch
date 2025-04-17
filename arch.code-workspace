@@ -11,6 +11,9 @@
             "path": "py_di_fastapi"
         },
         {
+            "path": "py_stream_fastapi"
+        },
+        {
             "path": "protobuf"
         }
     ]

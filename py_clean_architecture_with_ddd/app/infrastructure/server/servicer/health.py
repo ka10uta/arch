@@ -1,5 +1,6 @@
 import grpc
-from infrastructure.proto.v1.health import service_pb2, service_pb2_grpc
+
+from app.infrastructure.proto.v1.health import service_pb2, service_pb2_grpc
 
 
 class HealthServicer(service_pb2_grpc.HealthServiceServicer):

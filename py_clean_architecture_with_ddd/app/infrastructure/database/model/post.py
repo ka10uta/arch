@@ -6,7 +6,10 @@ from .user import UserModel
 
 class PostModel(Model):
     id = fields.IntField(pk=True)
-    user_id: fields.ForeignKeyRelation[UserModel] = fields.ForeignKeyField("models.UserModel", related_name="user_posts")
+    user_id: fields.ForeignKeyRelation[UserModel] = fields.ForeignKeyField(
+        "models.UserModel",
+        related_name="user_posts",
+    )
     title = fields.CharField(max_length=255)
     content = fields.TextField()
     is_published = fields.BooleanField(default=False)

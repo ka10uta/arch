@@ -1,7 +1,6 @@
 from abc import abstractmethod
 
-from app.domain.entity.user import User
-from app.domain.repository.base import WriteRepository
+from app.domain.repository.user import WriteUserRepository
 
 from .base import UnitOfWork
 
@@ -11,7 +10,7 @@ class UserUnitOfWork(UnitOfWork):
 
     @property
     @abstractmethod
-    def users(self) -> WriteRepository[User]:
+    def users(self) -> WriteUserRepository:
         """ユーザーリポジトリを取得します。"""
         raise NotImplementedError
 

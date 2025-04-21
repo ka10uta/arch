@@ -1,26 +1,47 @@
-import asyncio
+import logging
 
 import grpc
-from infrastructure.proto.v1.user import create_pb2, service_pb2_grpc
+from injector import Injector
 
 from app.iadapter.controller.user import UserController
+from app.infrastructure.proto.v1.user.create_pb2 import CreateUserRequest, CreateUserResponse
+from app.infrastructure.proto.v1.user.get_pb2 import GetUserRequest, GetUserResponse
+from app.infrastructure.proto.v1.user.service_pb2_grpc import UserServiceServicer
+
+from .extend import async_grpc_method
+
+logger = logging.getLogger(__name__)
 
 
-class UserServicer(service_pb2_grpc.UserServiceServicer):
-    def __init__(self, controller: UserController) -> None:
+
+class UserServicer(UserServiceServicer):
+    """ユーザー関連のgRPCサービサー実装"""
+
+    def __init__(self, controller: UserController, injector: Injector | None = None) -> None:
+        """コンストラクタ
+
+        Args:
+            controller: ユーザーコントローラー
+            injector: DIコンテナ
+        """
         self.controller = controller
+        self.injector = injector
 
-    def CreateUser(
+    @async_grpc_method("Error processing CreateUser request")
+    async def CreateUser(
         self,
-        request: create_pb2.CreateUserRequest,
+        request: CreateUserRequest,
         _context: grpc.ServicerContext,
-    ) -> create_pb2.CreateUserResponse:
-        """ユーザー作成エンドポイントの実装"""
-        # 新しいイベントループを作成して使用
-        loop = asyncio.new_event_loop()
-        asyncio.set_event_loop(loop)
-        try:
-            return loop.run_until_complete(self.controller.create_user(request))
-        finally:
-            loop.close()
+    ) -> CreateUserResponse:
+        """ユーザー作成エンドポイント(非同期)"""
+        return await self.controller.create_user(request)
+
+    @async_grpc_method("Error processing GetUser request")
+    async def GetUser(
+        self,
+        request: GetUserRequest,
+        _context: grpc.ServicerContext,
+    ) -> GetUserResponse:
+        """ユーザー取得エンドポイント(非同期)"""
+        return await self.controller.get_user_by_id(request)
 

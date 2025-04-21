@@ -3,18 +3,20 @@ from concurrent import futures
 
 import grpc
 from grpc_reflection.v1alpha import reflection
-from infrastructure.proto.v1.health import service_pb2 as health_service_pb2
-from infrastructure.proto.v1.health import service_pb2_grpc as health_service_pb2_grpc
-from infrastructure.proto.v1.user import service_pb2 as user_service_pb2
-from infrastructure.proto.v1.user import service_pb2_grpc as user_service_pb2_grpc
-from infrastructure.server import interceptor, servicer
 from injector import Injector
 from tortoise import Tortoise
 
-from app.application.interactor.user import UserInteractor
+from app.application.interactor.user.command import UserCommandInteractor
+from app.application.interactor.user.query import UserQueryInteractor
 from app.iadapter.controller.user import UserController
+from app.iadapter.presenter.user import UserPresenter
 from app.infrastructure.database import tortoise_config
 from app.infrastructure.di.container import DIContainer
+from app.infrastructure.proto.v1.health import service_pb2 as health_service_pb2
+from app.infrastructure.proto.v1.health import service_pb2_grpc as health_service_pb2_grpc
+from app.infrastructure.proto.v1.user import service_pb2 as user_service_pb2
+from app.infrastructure.proto.v1.user import service_pb2_grpc as user_service_pb2_grpc
+from app.infrastructure.server import interceptor, servicer
 
 
 async def init_db() -> None:
@@ -37,8 +39,18 @@ def serve() -> None:
 
     # DIコンテナの初期化
     injector = Injector([DIContainer()])
-    user_interactor = injector.get(UserInteractor)
-    user_controller = UserController(interactor=user_interactor)
+
+    # インタラクターを取得
+    command_interactor = injector.get(UserCommandInteractor)
+    query_interactor = injector.get(UserQueryInteractor)
+
+    # Injectが常に新しいプレゼンターを作成する
+    # 初期のコントローラー作成時は一時的にプレゼンターを作成
+    user_controller = UserController(
+        command_interactor=command_interactor,
+        query_interactor=query_interactor,
+        presenter=injector.get(UserPresenter),
+    )
 
     # インターセプターを作成
     interceptors = [
@@ -53,8 +65,14 @@ def serve() -> None:
     health_service_pb2_grpc.add_HealthServiceServicer_to_server(
         servicer.HealthServicer(), server,
     )
+
+    # UserServicerにはinjectをラップするサービサーを使用
+    user_servicer = servicer.UserServicer(
+        controller=user_controller,
+        injector=injector,  # 各リクエスト処理ごとに新しいプレゼンターを取得するためinjectを渡す
+    )
     user_service_pb2_grpc.add_UserServiceServicer_to_server(
-        servicer.UserServicer(controller=user_controller), server,
+        user_servicer, server,
     )
 
     # リフレクションサービスの追加
@@ -77,6 +95,11 @@ def serve() -> None:
         logger.warning("Server has been gracefully terminated.")
 
 if __name__ == "__main__":
-    logging.basicConfig(level=logging.INFO)
+    logging.basicConfig(
+        level=logging.DEBUG,
+        format="%(asctime)s.%(msecs)03d [%(levelname)s] %(message)s",
+        datefmt="%Y-%m-%dT%H:%M:%S",
+    )
+
     logger = logging.getLogger(__name__)
     serve()

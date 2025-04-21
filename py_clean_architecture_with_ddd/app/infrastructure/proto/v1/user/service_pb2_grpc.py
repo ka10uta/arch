@@ -3,6 +3,7 @@
 import grpc
 
 from app.infrastructure.proto.v1.user import create_pb2 as app_dot_infrastructure_dot_proto_dot_v1_dot_user_dot_create__pb2
+from app.infrastructure.proto.v1.user import get_pb2 as app_dot_infrastructure_dot_proto_dot_v1_dot_user_dot_get__pb2
 
 
 class UserServiceStub(object):
@@ -19,12 +20,23 @@ class UserServiceStub(object):
                 request_serializer=app_dot_infrastructure_dot_proto_dot_v1_dot_user_dot_create__pb2.CreateUserRequest.SerializeToString,
                 response_deserializer=app_dot_infrastructure_dot_proto_dot_v1_dot_user_dot_create__pb2.CreateUserResponse.FromString,
                 _registered_method=True)
+        self.GetUser = channel.unary_unary(
+                '/infrastructure.proto.user.v1.UserService/GetUser',
+                request_serializer=app_dot_infrastructure_dot_proto_dot_v1_dot_user_dot_get__pb2.GetUserRequest.SerializeToString,
+                response_deserializer=app_dot_infrastructure_dot_proto_dot_v1_dot_user_dot_get__pb2.GetUserResponse.FromString,
+                _registered_method=True)
 
 
 class UserServiceServicer(object):
     """Missing associated documentation comment in .proto file."""
 
     def CreateUser(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def GetUser(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -37,6 +49,11 @@ def add_UserServiceServicer_to_server(servicer, server):
                     servicer.CreateUser,
                     request_deserializer=app_dot_infrastructure_dot_proto_dot_v1_dot_user_dot_create__pb2.CreateUserRequest.FromString,
                     response_serializer=app_dot_infrastructure_dot_proto_dot_v1_dot_user_dot_create__pb2.CreateUserResponse.SerializeToString,
+            ),
+            'GetUser': grpc.unary_unary_rpc_method_handler(
+                    servicer.GetUser,
+                    request_deserializer=app_dot_infrastructure_dot_proto_dot_v1_dot_user_dot_get__pb2.GetUserRequest.FromString,
+                    response_serializer=app_dot_infrastructure_dot_proto_dot_v1_dot_user_dot_get__pb2.GetUserResponse.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -66,6 +83,33 @@ class UserService(object):
             '/infrastructure.proto.user.v1.UserService/CreateUser',
             app_dot_infrastructure_dot_proto_dot_v1_dot_user_dot_create__pb2.CreateUserRequest.SerializeToString,
             app_dot_infrastructure_dot_proto_dot_v1_dot_user_dot_create__pb2.CreateUserResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def GetUser(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/infrastructure.proto.user.v1.UserService/GetUser',
+            app_dot_infrastructure_dot_proto_dot_v1_dot_user_dot_get__pb2.GetUserRequest.SerializeToString,
+            app_dot_infrastructure_dot_proto_dot_v1_dot_user_dot_get__pb2.GetUserResponse.FromString,
             options,
             channel_credentials,
             insecure,

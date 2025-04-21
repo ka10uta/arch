@@ -3,7 +3,8 @@ syntax = "proto3";
 package infrastructure.proto.user.v1;
 
 import "app/infrastructure/proto/v1/user/create.proto";
-
+import "app/infrastructure/proto/v1/user/get.proto";
 service UserService {
   rpc CreateUser(CreateUserRequest) returns (CreateUserResponse) {}
+  rpc GetUser(GetUserRequest) returns (GetUserResponse) {}
 }

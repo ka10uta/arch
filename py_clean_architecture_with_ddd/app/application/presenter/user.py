@@ -1,29 +1,15 @@
-from abc import ABC, abstractmethod
+from abc import ABC
 
-from app.application.usecase.user import CreateUserOutputData
-
-
-class UserOutputPort(ABC):
-    """ユーザー関連のプレゼンターインターフェース"""
-
-    @abstractmethod
-    def present_user(self, output_data: CreateUserOutputData) -> None:
-        """ユーザー情報を表示する
-
-        Args:
-            output_data: 出力データ
-        """
-        raise NotImplementedError
+from app.application.usecase.user import (
+    UserCommandOutputPort,
+    UserQueryOutputPort,
+)
 
 
-class UserPresenter(UserOutputPort):
-    """ユーザー関連のプレゼンター実装"""
+class UserPresenterInterface(UserCommandOutputPort, UserQueryOutputPort, ABC):
+    """ユーザー関連のプレゼンターインターフェース
 
-    def present_user(self, output_data: CreateUserOutputData) -> None:
-        """ユーザー情報を表示する
-
-        Args:
-            output_data: 出力データ
-        """
-        # ここでは特に何もしない（gRPCレスポンスは別途構築される）
-        pass 
+    CQRSパターンに従い、コマンド操作とクエリ操作の両方の出力ポートを実装します。
+    抽象クラスとして定義し、実際の実装はiadapterレイヤーで行います。
+    """
+    # 抽象メソッドは親クラスのUserCommandOutputPortとUserQueryOutputPortで定義済み

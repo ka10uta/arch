@@ -1,20 +1,16 @@
-from datetime import datetime
-from uuid import UUID
-
-from pydantic import BaseModel, ConfigDict
+from pydantic import ConfigDict
 
 from app.domain.value_object.user.email import Email
 from app.domain.value_object.user.name import UserName
 
+from .base import Entity
 
-class User(BaseModel):
+
+class User(Entity):
     model_config = ConfigDict(frozen=True)
 
-    id: UUID
     name: UserName
     email: Email
-    created_at: datetime
-    updated_at: datetime
 
     @property
     def display_name(self) -> str:

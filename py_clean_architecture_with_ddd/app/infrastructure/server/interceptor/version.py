@@ -1,7 +1,8 @@
 from collections.abc import Callable
 
 import grpc
-from infrastructure.server import config as server_config
+
+from app.infrastructure.server import config as server_config
 
 
 class VersionInterceptor(grpc.ServerInterceptor):

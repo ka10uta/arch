@@ -1,27 +1,29 @@
 # mypy: disable-error-code="type-abstract"
-from typing import TYPE_CHECKING, Any, cast
 
 from injector import Binder, Module, inject, singleton
 
-from app.application.interactor.user import ReadRepositories, UserInteractor
-from app.application.presenter.user import UserPresenter
+from app.application.identity_map.user import UserIdentityMap
+from app.application.interactor.user.command import UserCommandInteractor
+from app.application.interactor.user.query import Repositories, UserQueryInteractor
+from app.application.presenter.user import UserPresenterInterface
 from app.application.unit_of_work.user import UserUnitOfWork
-from app.application.usecase.user import UserOutputPort
-from app.domain.entity.user import User
-from app.domain.repository.base import ReadRepository, WriteRepository
-from app.infrastructure.repository.user import UserRepository
+from app.application.usecase.user import (
+    UserCommandOutputPort,
+    UserQueryOutputPort,
+)
+from app.domain.repository.user import ReadUserRepository, WriteUserRepository
+from app.iadapter.presenter.user import UserPresenter
+from app.infrastructure.repository.user import ReadUserRepositoryImpl, WriteUserRepositoryImpl
 from app.infrastructure.unit_of_work.user import UserUnitOfWorkImpl
-
-if TYPE_CHECKING:
-    from contextlib import AbstractAsyncContextManager
 
 
 class DIContainer(Module):
     def configure(self, binder: Binder) -> None:
         # Repositories
-        binder.bind(UserRepository, to=UserRepository, scope=singleton)
-        binder.bind(WriteRepository[User], to=UserRepository, scope=singleton)
-        binder.bind(ReadRepository[User], to=UserRepository, scope=singleton)
+        binder.bind(ReadUserRepositoryImpl, to=ReadUserRepositoryImpl, scope=singleton)
+        binder.bind(WriteUserRepositoryImpl, to=WriteUserRepositoryImpl, scope=singleton)
+        binder.bind(WriteUserRepository, to=WriteUserRepositoryImpl, scope=singleton)
+        binder.bind(ReadUserRepository, to=ReadUserRepositoryImpl, scope=singleton)
 
         # UnitOfWork
         binder.bind(
@@ -30,50 +32,77 @@ class DIContainer(Module):
             scope=singleton,
         )
 
+        # IdentityMap
+        binder.bind(
+            UserIdentityMap,
+            to=UserIdentityMap,
+            scope=singleton,
+        )
+
         # Repositories group
         binder.bind(
-            ReadRepositories,
+            Repositories,
             to=self.configure_repositories,
             scope=singleton,
         )
 
-        # Presenter
+        # Presenter - リクエストごとに新しいインスタンスを作成
+        binder.bind(UserPresenter, to=UserPresenter)
+        binder.bind(UserPresenterInterface, to=UserPresenter)
+        binder.bind(UserCommandOutputPort, to=UserPresenter)
+        binder.bind(UserQueryOutputPort, to=UserPresenter)
+
+        # Command Interactor
         binder.bind(
-            UserOutputPort,
-            to=cast("type[UserOutputPort]", UserPresenter),
+            UserCommandInteractor,
+            to=self.configure_user_command_interactor,
             scope=singleton,
         )
-
-        # Interactors
+        # Query Interactor
         binder.bind(
-            UserInteractor,
-            to=self.configure_user_interactor,
+            UserQueryInteractor,
+            to=self.configure_user_query_interactor,
             scope=singleton,
         )
 
     @inject
     def configure_unit_of_work(
         self,
-        users: WriteRepository[User],
+        users: WriteUserRepositoryImpl,
     ) -> UserUnitOfWork:
         return UserUnitOfWorkImpl(users=users)
 
     @inject
     def configure_repositories(
         self,
-        user_repository: ReadRepository[User],
-    ) -> ReadRepositories:
-        return ReadRepositories(user=user_repository)
+        user_repository: ReadUserRepository,
+    ) -> Repositories:
+        return Repositories(user=user_repository)
 
     @inject
-    def configure_user_interactor(
+    def configure_user_command_interactor(
         self,
-        repositories: ReadRepositories,
-        presenter: UserOutputPort,
+        presenter: UserCommandOutputPort,
         uow: UserUnitOfWork,
-    ) -> UserInteractor:
-        return UserInteractor(
-            repositories=repositories,
+        identity_map: UserIdentityMap,
+        read_user_repository: ReadUserRepository,
+    ) -> UserCommandInteractor:
+        return UserCommandInteractor(
             presenter=presenter,
             uow=uow,
+            identity_map=identity_map,
+            read_user_repository=read_user_repository,
+        )
+
+    @inject
+    def configure_user_query_interactor(
+        self,
+        repositories: Repositories,
+        presenter: UserQueryOutputPort,
+        identity_map: UserIdentityMap,
+    ) -> UserQueryInteractor:
+        return UserQueryInteractor(
+            repositories=repositories,
+            presenter=presenter,
+            identity_map=identity_map,
         )
